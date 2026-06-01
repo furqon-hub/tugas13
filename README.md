@@ -21,3 +21,7 @@ Berikut adalah hasil screenshot dari semua route:
 ### 5. Pencarian Kategori (/kategori/search/programming)
 
 ![Search Kategori](screenshots/Tugas2/programming.png)
+
+Tugas 10
+![screenshot](screenshots/Tugas10/Screenshot%20(491).png)
+![screenshot](screenshots/Tugas10/Screenshot%20(492).png)]
