@@ -64,7 +64,87 @@
     </div>
 </div>
 
-{{-- Filter Kategori --}}
+{{-- Advanced Search Form --}}
+<div class="card mb-4 border-info">
+    <div class="card-header bg-info text-white">
+        <i class="bi bi-search"></i> Advanced Search & Filter
+    </div>
+    <div class="card-body">
+        <form action="{{ route('buku.search') }}" method="GET" class="row g-3">
+            {{-- Keyword Search --}}
+            <div class="col-md-4">
+                <label for="keyword" class="form-label">
+                    <i class="bi bi-text-paragraph"></i> Keyword
+                </label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="keyword"
+                    name="keyword"
+                    placeholder="Judul, Pengarang, Penerbit..."
+                    value="{{ request('keyword') }}">
+                <small class="text-muted">Search di judul, pengarang, penerbit</small>
+            </div>
+
+            {{-- Filter Kategori --}}
+            <div class="col-md-3">
+                <label for="kategori" class="form-label">
+                    <i class="bi bi-tag"></i> Kategori
+                </label>
+                <select class="form-select" id="kategori" name="kategori">
+                    <option value="">-- Semua Kategori --</option>
+                    @foreach ($kategoriList as $kat)
+                    <option value="{{ $kat }}" {{ request('kategori') == $kat ? 'selected' : '' }}>
+                        {{ $kat }}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Filter Tahun --}}
+            <div class="col-md-2">
+                <label for="tahun" class="form-label">
+                    <i class="bi bi-calendar"></i> Tahun
+                </label>
+                <select class="form-select" id="tahun" name="tahun">
+                    <option value="">-- Semua Tahun --</option>
+                    @foreach ($tahunList as $tahun)
+                    <option value="{{ $tahun }}" {{ request('tahun') == $tahun ? 'selected' : '' }}>
+                        {{ $tahun }}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Filter Ketersediaan --}}
+            <div class="col-md-2">
+                <label for="ketersediaan" class="form-label">
+                    <i class="bi bi-check2-square"></i> Ketersediaan
+                </label>
+                <select class="form-select" id="ketersediaan" name="ketersediaan">
+                    <option value="">-- Semua --</option>
+                    <option value="tersedia" {{ request('ketersediaan') == 'tersedia' ? 'selected' : '' }}>Tersedia</option>
+                    <option value="habis" {{ request('ketersediaan') == 'habis' ? 'selected' : '' }}>Habis</option>
+                </select>
+            </div>
+
+            {{-- Search & Reset Buttons --}}
+            <div class="col-md-1">
+                <label class="form-label d-block">&nbsp;</label>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-info flex-grow-1">
+                        <i class="bi bi-search"></i> Cari
+                    </button>
+                    <a href="{{ route('buku.index') }}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-clockwise"></i>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- Filter Kategori Quick Buttons --}}
 <div class="card mb-4">
     <div class="card-body">
         <h6 class="card-title">

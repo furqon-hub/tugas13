@@ -20,12 +20,20 @@ class BukuController extends Controller
         $bukuTersedia = Buku::where('stok', '>', 0)->count();
         $bukuHabis = Buku::where('stok', 0)->count();
 
+        // Get distinct years untuk dropdown
+        $tahunList = Buku::distinct()->orderBy('tahun_terbit', 'desc')->pluck('tahun_terbit');
+
+        // Get distinct categories
+        $kategoriList = Buku::distinct()->orderBy('kategori')->pluck('kategori');
+
         // Return view dengan data
         return view('buku.index', compact(
             'bukus',
             'totalBuku',
             'bukuTersedia',
-            'bukuHabis'
+            'bukuHabis',
+            'tahunList',
+            'kategoriList'
         ));
     }
 
@@ -101,6 +109,65 @@ class BukuController extends Controller
             'bukuTersedia',
             'bukuHabis',
             'kategori'
+        ));
+    }
+
+    /**
+     * Search dan filter buku dengan kriteria advanced.
+     */
+    public function search(Request $request)
+    {
+        $query = Buku::query();
+
+        // Filter keyword (judul, pengarang, penerbit)
+        if ($request->filled('keyword')) {
+            $keyword = $request->keyword;
+            $query->where(function ($q) use ($keyword) {
+                $q->where('judul', 'like', '%' . $keyword . '%')
+                    ->orWhere('pengarang', 'like', '%' . $keyword . '%')
+                    ->orWhere('penerbit', 'like', '%' . $keyword . '%');
+            });
+        }
+
+        // Filter kategori
+        if ($request->filled('kategori') && $request->kategori !== '') {
+            $query->where('kategori', $request->kategori);
+        }
+
+        // Filter tahun
+        if ($request->filled('tahun') && $request->tahun !== '') {
+            $query->where('tahun_terbit', $request->tahun);
+        }
+
+        // Filter ketersediaan
+        if ($request->filled('ketersediaan')) {
+            if ($request->ketersediaan == 'tersedia') {
+                $query->where('stok', '>', 0);
+            } elseif ($request->ketersediaan == 'habis') {
+                $query->where('stok', 0);
+            }
+        }
+
+        $bukus = $query->latest()->get();
+
+        // Statistik
+        $totalBuku = $bukus->count();
+        $bukuTersedia = $bukus->where('stok', '>', 0)->count();
+        $bukuHabis = $bukus->where('stok', 0)->count();
+
+        // Get distinct years untuk dropdown
+        $tahunList = Buku::distinct()->orderBy('tahun_terbit', 'desc')->pluck('tahun_terbit');
+
+        // Get distinct categories
+        $kategoriList = Buku::distinct()->orderBy('kategori')->pluck('kategori');
+
+        return view('buku.index', compact(
+            'bukus',
+            'totalBuku',
+            'bukuTersedia',
+            'bukuHabis',
+            'tahunList',
+            'kategoriList'
         ));
     }
 }

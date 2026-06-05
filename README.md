@@ -24,4 +24,9 @@ Berikut adalah hasil screenshot dari semua route:
 
 Tugas 10
 ![screenshot](screenshots/Tugas10/Screenshot%20(491).png)
-![screenshot](screenshots/Tugas10/Screenshot%20(492).png)]
+![screenshot](screenshots/Tugas10/Screenshot%20(492).png)
+
+Tugas 11
+![screenshot](screenshots/Tugas11/dashboard.png)
+![screenshot](screenshots/Tugas11/bukucard.png)
+![screenshot](screenshots/Tugas11/advanvedsearch.png)

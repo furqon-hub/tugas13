@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\PerpustakaanController;
 use App\Http\Controllers\BukuController;
+use App\Http\Controllers\AnggotaController;
+use App\Http\Controllers\DashboardController;
 use App\Models\Buku;
 use App\Models\Anggota;
 
@@ -12,8 +14,10 @@ use App\Models\Anggota;
 // 1. ROUTE DEFAULT & HOME
 // ==========================================
 Route::get('/', function () {
-    return view('welcome'); // Diubah ke welcome agar tidak error. Ganti ke 'home' jika file home.blade.php sudah dibuat
+    return view('home');
 })->name('home');
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::get('/hello', function () {
     return 'Hello dari Laravel!';
@@ -49,60 +53,19 @@ Route::get('/kategori/{id}', [KategoriController::class, 'show'])->name('kategor
 // ==========================================
 // 4. ROUTE BUKU (PRAKTIKUM 11 - RESOURCE)
 // ==========================================
+// Custom route harus didefinisikan SEBELUM route resource agar tidak bentrok
+Route::get('/buku/kategori/{kategori}', [BukuController::class, 'filterKategori'])->name('buku.kategori');
+Route::post('/buku/search', [BukuController::class, 'search'])->name('buku.search');
+Route::get('/buku/search', [BukuController::class, 'search'])->name('buku.search');
+
 // Resource route akan otomatis membuatkan route index, create, store, show, edit, update, destroy
 Route::resource('buku', BukuController::class);
 
-// Custom route untuk filter kategori
-Route::get('/buku/kategori/{kategori}', [BukuController::class, 'filterKategori'])->name('buku.kategori');
-
 
 // ==========================================
-// 5. ROUTE ANGGOTA (DARI DATABASE)
+// 5. ROUTE ANGGOTA (PRAKTIKUM 11 - RESOURCE)
 // ==========================================
-Route::get('/anggota', function () {
-    $anggotas = Anggota::all();
-
-    $html = '<h1>Daftar Anggota</h1>';
-    $html .= '<table border="1" cellpadding="10">';
-    $html .= '<tr><th>ID</th><th>Kode</th><th>Nama</th><th>Email</th><th>Umur</th><th>Status</th><th>Aksi</th></tr>';
-
-    foreach ($anggotas as $anggota) {
-        $html .= '<tr>';
-        $html .= '<td>' . $anggota->id . '</td>';
-        $html .= '<td>' . $anggota->kode_anggota . '</td>';
-        $html .= '<td>' . $anggota->nama . '</td>';
-        $html .= '<td>' . $anggota->email . '</td>';
-        $html .= '<td>' . $anggota->umur . ' tahun</td>';
-        $html .= '<td>' . $anggota->status . '</td>';
-        $html .= '<td><a href="/anggota/' . $anggota->id . '">Detail</a></td>';
-        $html .= '</tr>';
-    }
-    $html .= '</table>';
-    return $html;
-})->name('anggota.index');
-
-Route::get('/anggota/{id}', function ($id) {
-    $anggota = Anggota::findOrFail($id);
-
-    $html = '<h1>Detail Anggota</h1>';
-    $html .= '<a href="/anggota">Kembali</a><br /><br />';
-    $html .= '<table border="1" cellpadding="10">';
-    $html .= '<tr><th>Field</th><th>Value</th></tr>';
-    $html .= '<tr><td>Kode Anggota</td><td>' . $anggota->kode_anggota . '</td></tr>';
-    $html .= '<tr><td>Nama</td><td>' . $anggota->nama . '</td></tr>';
-    $html .= '<tr><td>Email</td><td>' . $anggota->email . '</td></tr>';
-    $html .= '<tr><td>Telepon</td><td>' . $anggota->telepon . '</td></tr>';
-    $html .= '<tr><td>Alamat</td><td>' . $anggota->alamat . '</td></tr>';
-    $html .= '<tr><td>Tanggal Lahir</td><td>' . $anggota->tanggal_lahir->format('d-m-Y') . '</td></tr>';
-    $html .= '<tr><td>Umur</td><td>' . $anggota->umur . ' tahun</td></tr>';
-    $html .= '<tr><td>Jenis Kelamin</td><td>' . $anggota->jenis_kelamin . '</td></tr>';
-    $html .= '<tr><td>Pekerjaan</td><td>' . $anggota->pekerjaan . '</td></tr>';
-    $html .= '<tr><td>Tanggal Daftar</td><td>' . $anggota->tanggal_daftar->format('d-m-Y') . '</td></tr>';
-    $html .= '<tr><td>Lama Anggota</td><td>' . $anggota->lama_anggota . ' hari</td></tr>';
-    $html .= '<tr><td>Status</td><td>' . $anggota->status . '</td></tr>';
-    $html .= '</table>';
-    return $html;
-})->name('anggota.show');
+Route::resource('anggota', AnggotaController::class);
 
 
 // ==========================================
