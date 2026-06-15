@@ -160,10 +160,13 @@
 
                 <hr>
 
-                <form action="{{ route('buku.destroy', $buku->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus buku ini?')">
+                <form action="{{ route('buku.destroy', $buku->id) }}" 
+                      method="POST" 
+                      class="delete-form">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-danger w-100">
+                    <button type="button" class="btn btn-danger w-100 btn-delete" 
+                            data-judul="{{ $buku->judul }}">
                         <i class="bi bi-trash"></i> Hapus Buku
                     </button>
                 </form>
@@ -235,4 +238,43 @@
     </div>
 </div>
 </div>
+
+@push('scripts')
+<script>
+    // SweetAlert confirmation untuk delete
+    document.querySelectorAll('.btn-delete').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const form = this.closest('form');
+            const judul = this.getAttribute('data-judul');
+            
+            Swal.fire({
+                title: 'Konfirmasi Hapus',
+                text: `Apakah Anda yakin ingin menghapus buku "${judul}"?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+
+    // Loading state saat submit form
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', function() {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            if (submitBtn && !this.classList.contains('delete-form')) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Menyimpan...';
+            }
+        });
+    });
+</script>
+@endpush
 @endsection
