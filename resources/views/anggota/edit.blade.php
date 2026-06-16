@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Tambah Anggota')
+@section('title', 'Edit Anggota')
 
 @push('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -10,15 +10,16 @@
 <div class="row justify-content-center">
     <div class="col-md-10">
         <div class="card">
-            <div class="card-header bg-success text-white">
+            <div class="card-header bg-warning">
                 <h4 class="mb-0">
-                    <i class="bi bi-person-plus"></i>
-                    Tambah Anggota Baru
+                    <i class="bi bi-pencil-square"></i>
+                    Edit Anggota: {{ $anggota->nama }}
                 </h4>
             </div>
             <div class="card-body">
-                <form action="{{ route('anggota.store') }}" method="POST">
+                <form action="{{ route('anggota.update', $anggota->id) }}" method="POST">
                     @csrf
+                    @method('PUT')
 
                     <div class="row">
                         {{-- Kode Anggota --}}
@@ -30,12 +31,10 @@
                                 name="kode_anggota"
                                 id="kode_anggota"
                                 class="form-control @error('kode_anggota') is-invalid @enderror"
-                                value="{{ old('kode_anggota') }}"
-                                placeholder="Contoh: AGT-001">
+                                value="{{ old('kode_anggota', $anggota->kode_anggota) }}">
                             @error('kode_anggota')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            <small class="text-muted">Format: AGT-XXX</small>
                         </div>
 
                         {{-- Nama --}}
@@ -47,8 +46,7 @@
                                 name="nama"
                                 id="nama"
                                 class="form-control @error('nama') is-invalid @enderror"
-                                value="{{ old('nama') }}"
-                                placeholder="Nama lengkap anggota">
+                                value="{{ old('nama', $anggota->nama) }}">
                             @error('nama')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -65,8 +63,7 @@
                                 name="email"
                                 id="email"
                                 class="form-control @error('email') is-invalid @enderror"
-                                value="{{ old('email') }}"
-                                placeholder="email@example.com">
+                                value="{{ old('email', $anggota->email) }}">
                             @error('email')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -81,12 +78,10 @@
                                 name="telepon"
                                 id="telepon"
                                 class="form-control @error('telepon') is-invalid @enderror"
-                                value="{{ old('telepon') }}"
-                                placeholder="081234567890">
+                                value="{{ old('telepon', $anggota->telepon) }}">
                             @error('telepon')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            <small class="text-muted">Format: 08xxxxxxxxxx atau +628xxxxxxxxxx</small>
                         </div>
                     </div>
 
@@ -98,8 +93,7 @@
                         <textarea name="alamat"
                             id="alamat"
                             rows="3"
-                            class="form-control @error('alamat') is-invalid @enderror"
-                            placeholder="Alamat lengkap dengan kota dan kode pos">{{ old('alamat') }}</textarea>
+                            class="form-control @error('alamat') is-invalid @enderror">{{ old('alamat', $anggota->alamat) }}</textarea>
                         @error('alamat')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -115,7 +109,7 @@
                                 name="tanggal_lahir"
                                 id="tanggal_lahir"
                                 class="form-control @error('tanggal_lahir') is-invalid @enderror"
-                                value="{{ old('tanggal_lahir') }}"
+                                value="{{ old('tanggal_lahir', $anggota->tanggal_lahir?->format('Y-m-d')) }}"
                                 max="{{ date('Y-m-d') }}">
                             @error('tanggal_lahir')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -131,12 +125,12 @@
                                 id="jenis_kelamin"
                                 class="form-select @error('jenis_kelamin') is-invalid @enderror">
                                 <option value="">-- Pilih Jenis Kelamin --</option>
-                                <option value="Laki-laki" {{ old('jenis_kelamin') == 'Laki-laki' ? 'selected' : '' }}>
-                                    Laki-laki
+                                @foreach(['Laki-laki', 'Perempuan'] as $jk)
+                                <option value="{{ $jk }}"
+                                    {{ old('jenis_kelamin', $anggota->jenis_kelamin) == $jk ? 'selected' : '' }}>
+                                    {{ $jk }}
                                 </option>
-                                <option value="Perempuan" {{ old('jenis_kelamin') == 'Perempuan' ? 'selected' : '' }}>
-                                    Perempuan
-                                </option>
+                                @endforeach
                             </select>
                             @error('jenis_kelamin')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -150,8 +144,7 @@
                                 name="pekerjaan"
                                 id="pekerjaan"
                                 class="form-control @error('pekerjaan') is-invalid @enderror"
-                                value="{{ old('pekerjaan') }}"
-                                placeholder="Contoh: Mahasiswa, Pegawai, dll">
+                                value="{{ old('pekerjaan', $anggota->pekerjaan) }}">
                             @error('pekerjaan')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -168,7 +161,7 @@
                                 name="tanggal_daftar"
                                 id="tanggal_daftar"
                                 class="form-control @error('tanggal_daftar') is-invalid @enderror"
-                                value="{{ old('tanggal_daftar', date('Y-m-d')) }}"
+                                value="{{ old('tanggal_daftar', $anggota->tanggal_daftar?->format('Y-m-d')) }}"
                                 max="{{ date('Y-m-d') }}">
                             @error('tanggal_daftar')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -183,12 +176,12 @@
                             <select name="status"
                                 id="status"
                                 class="form-select @error('status') is-invalid @enderror">
-                                <option value="Aktif" {{ old('status', 'Aktif') == 'Aktif' ? 'selected' : '' }}>
-                                    Aktif
+                                @foreach(['Aktif', 'Nonaktif'] as $st)
+                                <option value="{{ $st }}"
+                                    {{ old('status', $anggota->status) == $st ? 'selected' : '' }}>
+                                    {{ $st }}
                                 </option>
-                                <option value="Nonaktif" {{ old('status') == 'Nonaktif' ? 'selected' : '' }}>
-                                    Nonaktif
-                                </option>
+                                @endforeach
                             </select>
                             @error('status')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -200,14 +193,27 @@
 
                     {{-- Buttons --}}
                     <div class="d-flex justify-content-between">
-                        <a href="{{ route('anggota.index') }}" class="btn btn-secondary">
+                        <a href="{{ route('anggota.show', $anggota->id) }}" class="btn btn-secondary">
                             <i class="bi bi-arrow-left"></i> Kembali
                         </a>
-                        <button type="submit" class="btn btn-success">
-                            <i class="bi bi-save"></i> Simpan Anggota
+                        <button type="submit" class="btn btn-warning">
+                            <i class="bi bi-save"></i> Update Anggota
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        {{-- Info Update --}}
+        <div class="card mt-3">
+            <div class="card-body">
+                <small class="text-muted">
+                    <i class="bi bi-info-circle"></i>
+                    <strong>Informasi:</strong><br />
+                    - Anggota terdaftar: {{ $anggota->created_at->format('d M Y H:i') }}<br />
+                    - Terakhir diupdate: {{ $anggota->updated_at->format('d M Y H:i') }}<br />
+                    - Lama menjadi anggota: {{ $anggota->lama_anggota }} hari ({{ round($anggota->lama_anggota / 365, 1) }} tahun)
+                </small>
             </div>
         </div>
     </div>
@@ -218,7 +224,7 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/id.js"></script>
 <script>
-    // Initialize Flatpickr untuk tanggal lahir
+    // Initialize Flatpickr
     flatpickr("#tanggal_lahir", {
         dateFormat: "Y-m-d",
         maxDate: "today",
@@ -227,20 +233,12 @@
         altFormat: "d F Y",
     });
 
-    // Initialize Flatpickr untuk tanggal daftar
     flatpickr("#tanggal_daftar", {
         dateFormat: "Y-m-d",
         maxDate: "today",
         locale: "id",
         altInput: true,
         altFormat: "d F Y",
-        defaultDate: "today",
-    });
-
-    // Auto format telepon (hapus karakter non-digit)
-    document.getElementById('telepon').addEventListener('input', function() {
-        let value = this.value.replace(/[^\d+]/g, '');
-        this.value = value;
     });
 </script>
 @endpush
