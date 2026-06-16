@@ -58,16 +58,16 @@ Tugas 11
 ### 1. Auto-Generate Kode Anggota
 
 Field kode anggota terisi otomatis oleh sistem saat form tambah anggota diakses:
-![Auto Generate Kode](screenshots/tugas13/validation_auto_kode.png)
+![Auto Generate Kode](screenshots/Tugas13/validation_auto_kode.png)
 
 ### 2. Fitur Export Excel
 
 - **Tombol Export Excel pada Halaman Utama:**
-  ![Tombol Export Excel](screenshots/tugas13/excel_button.png)
+  ![Tombol Export Excel](screenshots/Tugas13/excel_button.png)
 - **Hasil Berkas Excel saat Dibuka:**
-  ![Hasil Spreadsheet Excel](screenshots/tugas13/excel_result.png)
+  ![Hasil Spreadsheet Excel](screenshots/Tugas13/excel_result.png)
 
 ### 3. Fitur Advanced Search & Filter
 
 Proses penyaringan data anggota menggunakan kombinasi beberapa parameter input sekaligus:
-![Advanced Search & Filter](screenshots/tugas13/advanced_search_filter.png)
+![Advanced Search & Filter](screenshots/Tugas13/advanced_search_filter.png)
