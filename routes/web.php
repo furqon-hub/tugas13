@@ -39,7 +39,6 @@ Route::get('/test-db', function () {
 // ==========================================
 Route::get('/perpustakaan', [PerpustakaanController::class, 'index'])->name('perpus.home');
 Route::get('/about', [PerpustakaanController::class, 'about']);
-// Route::get('/buku/{id}', [PerpustakaanController::class, 'show']); // Dimatikan karena bentrok dengan BukuController Resource
 
 
 // ==========================================
@@ -53,7 +52,6 @@ Route::get('/kategori/{id}', [KategoriController::class, 'show'])->name('kategor
 // ==========================================
 // 4. ROUTE BUKU (PRAKTIKUM 11 - RESOURCE)
 // ==========================================
-// Custom route harus didefinisikan SEBELUM route resource agar tidak bentrok
 Route::get('/buku/kategori/{kategori}', [BukuController::class, 'filterKategori'])->name('buku.kategori');
 Route::post('/buku/search', [BukuController::class, 'search'])->name('buku.search');
 Route::get('/buku/search', [BukuController::class, 'search'])->name('buku.search');
@@ -62,13 +60,15 @@ Route::get('/buku/search', [BukuController::class, 'search'])->name('buku.search
 Route::post('/buku/bulk-delete', [BukuController::class, 'bulkDelete'])->name('buku.bulk-delete');
 Route::get('/buku/export', [BukuController::class, 'export'])->name('buku.export');
 
-// Resource route akan otomatis membuatkan route index, create, store, show, edit, update, destroy
+// Resource route buku
 Route::resource('buku', BukuController::class);
 
 
 // ==========================================
-// 5. ROUTE ANGGOTA (PRAKTIKUM 11 - RESOURCE)
+// 5. ROUTE ANGGOTA (TUGAS PERTEMUAN 13)
 // ==========================================
+Route::get('/anggota/export', [AnggotaController::class, 'export'])->name('anggota.export');
+Route::get('/anggota/search', [AnggotaController::class, 'search'])->name('anggota.search');
 Route::resource('anggota', AnggotaController::class);
 
 

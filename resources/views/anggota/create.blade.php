@@ -21,21 +21,17 @@
                     @csrf
 
                     <div class="row">
-                        {{-- Kode Anggota --}}
+                        {{-- Kode Anggota (Tugas 1) --}}
                         <div class="col-md-4 mb-3">
                             <label for="kode_anggota" class="form-label">
                                 Kode Anggota <span class="text-danger">*</span>
                             </label>
                             <input type="text"
                                 name="kode_anggota"
-                                id="kode_anggota"
-                                class="form-control @error('kode_anggota') is-invalid @enderror"
-                                value="{{ old('kode_anggota') }}"
-                                placeholder="Contoh: AGT-001">
-                            @error('kode_anggota')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                            <small class="text-muted">Format: AGT-XXX</small>
+                                class="form-control"
+                                value="{{ old('kode_anggota', $kodeAnggota) }}"
+                                readonly>
+                            <small class="text-muted">Kode otomatis dari sistem.</small>
                         </div>
 
                         {{-- Nama --}}
@@ -218,7 +214,6 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/id.js"></script>
 <script>
-    // Initialize Flatpickr untuk tanggal lahir
     flatpickr("#tanggal_lahir", {
         dateFormat: "Y-m-d",
         maxDate: "today",
@@ -227,7 +222,6 @@
         altFormat: "d F Y",
     });
 
-    // Initialize Flatpickr untuk tanggal daftar
     flatpickr("#tanggal_daftar", {
         dateFormat: "Y-m-d",
         maxDate: "today",
@@ -237,7 +231,6 @@
         defaultDate: "today",
     });
 
-    // Auto format telepon (hapus karakter non-digit)
     document.getElementById('telepon').addEventListener('input', function() {
         let value = this.value.replace(/[^\d+]/g, '');
         this.value = value;
